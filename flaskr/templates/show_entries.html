@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+      <dl>
+        <dt>标题:
+        <dd><input type=text size=30 name=title>
+        <dt>文本:
+        <dd><textarea name=text rows=5 cols=40></textarea>
+        <dd><input type=submit value=留言>
+      </dl>
+    </form>
+  {% endif %}
+  <ul class=entries>
+  {% for entry in entries %}
+    <li>
+      <h2>
+            {{ entry.title }}
+      </h2>
+      <div>
+        <span style="color:red;font-size:12px">
+          &nbsp;&nbsp;{{ entry.username[0][0] }}
+        </span>
+        <span style="color:rgb(65, 210, 247);font-size:12px">
+          发布于：{{ entry.create_time }}
+        </span>
+      </div>
+      {{ entry.text|safe }}
+  {% else %}
+    <li><em>难以置信，到现在为止都没有留言信息!</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
