@@ -5,9 +5,9 @@
   <form action="{{ url_for('register') }}" method=post>
     <dl>
       <dt>用户名:
-      <dd><input type=text name=username>
+      <dd><input type=text name=username pattern="[0-9a-zA-Z_]{16}" placeholder="请输入16位字母数字下划线">
       <dt>密&nbsp;&nbsp;码:
-      <dd><input type=password name=password>
+      <dd><input type=password name=password pattern="[0-9a-zA-Z]{4}" placeholder="请输入4位字母数字">
       <dd><input type=submit value=确认注册>
     </dl>
   </form>

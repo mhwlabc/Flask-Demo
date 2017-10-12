@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 '''所有的导入包'''
 import os
+import re
 import sqlite3
 
 from flask import (Flask, abort, flash, g, redirect, render_template, request,
@@ -24,7 +25,7 @@ app.config.update(dict(
 ))
 
 # 开启调试
-# app.debug = True
+app.debug = True
 
 # 设置一个名为FLASKR_SETTINGS的环境变量来设定一个配置文件载入后是否覆盖默认值
 # silent静默开关表示flask不去关心这个键值是否存在。
@@ -113,17 +114,24 @@ def login():
         # 向数据库查询账户是否存在
         cur = g.db.execute('select id,username, password from userinfo where username=? and password=?', [
                            request.form['username'], request.form['password']]).fetchall()
-
-        # 判断用户名和密码是否正确
-        if not cur:
-            error = '用户名或密码不正确'.decode('utf-8')
-        else:
-            session['logged_in'] = True
-            app.config['USERNAME'] = cur[0][1]
-            app.config['UID'] = cur[0][0]
-            msg = '登录成功！'.decode('utf-8')
-            flash(msg)
-            return redirect(url_for('show_entries'))
+        # 不允许使用除字母数字下划线之外的字符作为账号
+        username = re.findall(u'([0-9a-zA-Z_]+)', request.form['username'])
+        password = re.findall(u'([0-9a-zA-Z_]+)', request.form['password'])
+        if username and password:
+            if username[0] == request.form['username'] and password[0] == request.form['password']:
+                # 判断用户名和密码是否正确
+                if not cur:
+                    error = '用户名或密码不正确'.decode('utf-8')
+                else:
+                    session['logged_in'] = True
+                    app.config['USERNAME'] = cur[0][1]
+                    app.config['UID'] = cur[0][0]
+                    msg = '登录成功！'.decode('utf-8')
+                    flash(msg)
+                    return redirect(url_for('show_entries'))
+        msg = '不允许使用除字母数字下划线之外的字符!'.decode('utf-8')
+        flash(msg)
+        return redirect(url_for('login'))
     return render_template('login.html', error=error)
 
 
@@ -133,25 +141,34 @@ def register():
     error = None
     # 判断是请求页面，还是确认注册
     if request.method == 'POST':
-        # 向数据库查询账户是否存在
-        cur = g.db.execute('select username, password from userinfo where username=? and password=?', [
-                           request.form['username'], request.form['password']])
-        # 判断是否是注册请求
-        if not cur.fetchall():
-            # 向数据库插入用户注册的信息
-            g.db.execute('insert into userinfo (username, password) values (?, ?)', [
-                request.form['username'], request.form['password']])
-            g.db.commit()
-            # 会乱码，解码为utf-8
-            msg = '注册成功'.decode('utf-8')
-            url = 'show_entries'
-        else:
-            # 会乱码，解码为utf-8
-            msg = '账号已被注册'.decode('utf-8')
-            url = 'login'
+        # 不允许使用除字母数字下划线之外的字符作为账号
+        username = re.findall(u'([0-9a-zA-Z_]+)', request.form['username'])
+        password = re.findall(u'([0-9a-zA-Z_]+)', request.form['password'])
+        if username and password:
+            if username[0] == request.form['username'] and password[0] == request.form['password']:
+                # 向数据库查询账户是否存在
+                cur = g.db.execute('select username, password from userinfo where username=? and password=?', [
+                    request.form['username'], request.form['password']])
+                # 判断是否是注册请求
+                if not cur.fetchall():
+                    # 向数据库插入用户注册的信息
+                    g.db.execute('insert into userinfo (username, password) values (?, ?)', [
+                        request.form['username'], request.form['password']])
+                    g.db.commit()
+                    # 会乱码，解码为utf-8
+                    msg = '注册成功'.decode('utf-8')
+                    url = 'show_entries'
+                else:
+                    # 会乱码，解码为utf-8
+                    msg = '账号已被注册'.decode('utf-8')
+                    url = 'login'
 
+                flash(msg)
+                return redirect(url_for(url))
+
+        msg = '不允许使用除字母数字下划线之外的字符!'.decode('utf-8')
         flash(msg)
-        return redirect(url_for(url))
+        return redirect(url_for('register'))
     return render_template('register.html', error=error)
 
 
