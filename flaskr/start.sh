@@ -1,1 +1,1 @@
-py flaskr.py > /home/lei/flaskr.log 2>&1 &
+python flaskr.py > /home/lei/flaskr.log 2>&1 &
