@@ -102,4 +102,4 @@ ENV/
 
 # 
 .vscode/
-flaskr/flaskr.db
+*.db
