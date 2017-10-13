@@ -7,6 +7,11 @@ import sqlite3
 from flask import (Flask, abort, flash, g, redirect, render_template, request,
                    session, url_for)
 
+from gevent import monkey
+from gevent.pywsgi import WSGIServer
+
+monkey.patch_all()
+
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
@@ -184,4 +189,9 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    # 生成数据库
+    if 'flaskr.db' not in os.listdir('./'):
+        init_db()
+    # app.run(host='0.0.0.0')
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
