@@ -124,16 +124,22 @@ def login():
         password = re.findall(u'([0-9a-zA-Z_]+)', request.form['password'])
         if username and password:
             if username[0] == request.form['username'] and password[0] == request.form['password']:
-                # 判断用户名和密码是否正确
-                if not cur:
-                    error = '用户名或密码不正确'.decode('utf-8')
-                else:
-                    session['logged_in'] = True
-                    app.config['USERNAME'] = cur[0][1]
-                    app.config['UID'] = cur[0][0]
-                    msg = '登录成功！'.decode('utf-8')
-                    flash(msg)
-                    return redirect(url_for('show_entries'))
+                if len(request.form['username']) >= 4 and len(request.form['password']) >= 4:
+                    # 判断用户名和密码是否正确
+                    if not cur:
+                        error = '用户名或密码不正确'.decode('utf-8')
+                    else:
+                        session['logged_in'] = True
+                        app.config['USERNAME'] = cur[0][1]
+                        app.config['UID'] = cur[0][0]
+                        msg = '登录成功！'.decode('utf-8')
+                        flash(msg)
+                        return redirect(url_for('show_entries'))
+
+                msg = '请输入4~16位字符!'.decode('utf-8')
+                flash(msg)
+                return redirect(url_for('login'))
+
         msg = '不允许使用除字母数字下划线之外的字符!'.decode('utf-8')
         flash(msg)
         return redirect(url_for('login'))
@@ -151,25 +157,29 @@ def register():
         password = re.findall(u'([0-9a-zA-Z_]+)', request.form['password'])
         if username and password:
             if username[0] == request.form['username'] and password[0] == request.form['password']:
-                # 向数据库查询账户是否存在
-                cur = g.db.execute('select username, password from userinfo where username=? and password=?', [
-                    request.form['username'], request.form['password']])
-                # 判断是否是注册请求
-                if not cur.fetchall():
-                    # 向数据库插入用户注册的信息
-                    g.db.execute('insert into userinfo (username, password) values (?, ?)', [
+                if len(request.form['username']) >= 4 and len(request.form['password']) >= 4:
+                    # 向数据库查询账户是否存在
+                    cur = g.db.execute('select username, password from userinfo where username=? and password=?', [
                         request.form['username'], request.form['password']])
-                    g.db.commit()
-                    # 会乱码，解码为utf-8
-                    msg = '注册成功'.decode('utf-8')
-                    url = 'show_entries'
-                else:
-                    # 会乱码，解码为utf-8
-                    msg = '账号已被注册'.decode('utf-8')
-                    url = 'login'
+                    # 判断是否是注册请求
+                    if not cur.fetchall():
+                        # 向数据库插入用户注册的信息
+                        g.db.execute('insert into userinfo (username, password) values (?, ?)', [
+                            request.form['username'], request.form['password']])
+                        g.db.commit()
+                        # 会乱码，解码为utf-8
+                        msg = '注册成功'.decode('utf-8')
+                        url = 'show_entries'
+                    else:
+                        # 会乱码，解码为utf-8
+                        msg = '账号已被注册'.decode('utf-8')
+                        url = 'login'
 
+                    flash(msg)
+                    return redirect(url_for(url))
+                msg = '请输入4~16位字符!'.decode('utf-8')
                 flash(msg)
-                return redirect(url_for(url))
+                return redirect(url_for('login'))
 
         msg = '不允许使用除字母数字下划线之外的字符!'.decode('utf-8')
         flash(msg)
