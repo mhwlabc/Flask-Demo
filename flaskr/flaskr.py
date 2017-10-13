@@ -193,5 +193,5 @@ if __name__ == "__main__":
     if 'flaskr.db' not in os.listdir('./'):
         init_db()
     # app.run(host='0.0.0.0')
-    http_server = WSGIServer(('', 5000), app)
+    http_server = WSGIServer(('', 1000), app)
     http_server.serve_forever()
