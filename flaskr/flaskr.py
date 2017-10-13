@@ -30,7 +30,7 @@ app.config.update(dict(
 ))
 
 # 开启调试
-app.debug = True
+# app.debug = True
 
 # 设置一个名为FLASKR_SETTINGS的环境变量来设定一个配置文件载入后是否覆盖默认值
 # silent静默开关表示flask不去关心这个键值是否存在。
