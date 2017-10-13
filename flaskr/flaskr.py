@@ -30,7 +30,7 @@ app.config.update(dict(
 ))
 
 # 开启调试
-# app.debug = True
+app.debug = True
 
 # 设置一个名为FLASKR_SETTINGS的环境变量来设定一个配置文件载入后是否覆盖默认值
 # silent静默开关表示flask不去关心这个键值是否存在。
@@ -136,7 +136,7 @@ def login():
                         flash(msg)
                         return redirect(url_for('show_entries'))
 
-                msg = '请输入4~16位字符!'.decode('utf-8')
+                msg = '请根据要求格式输入'.decode('utf-8')
                 flash(msg)
                 return redirect(url_for('login'))
 
@@ -177,7 +177,7 @@ def register():
 
                     flash(msg)
                     return redirect(url_for(url))
-                msg = '请输入4~16位字符!'.decode('utf-8')
+                msg = '请根据要求格式输入'.decode('utf-8')
                 flash(msg)
                 return redirect(url_for('login'))
 
