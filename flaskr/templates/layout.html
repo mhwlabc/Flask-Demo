@@ -1,8 +1,8 @@
 <!doctype html>
-<title>Flaskr</title>
+<title>留言板</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <div class=page>
-    <h1><a href="{{ url_for('show_entries') }}" style="text-decoration:None">Flaskr：留言板</a></h1>
+    <h1><a href="{{ url_for('show_entries') }}" style="text-decoration:None">留言板</a></h1>
   <div class=metanav>
   {% if not session.logged_in %}
     <a href="{{ url_for('login') }}">登录</a>
