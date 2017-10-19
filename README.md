@@ -30,6 +30,7 @@ source /usr/bin/virtualenvwrapper.sh
 进入虚拟环境目录`~/.virtualenvs`，使用`virtualenv  虚拟环境名称`创建虚拟环境。
 
 还可以使用`virtualenv -p 虚拟环境版本(如/usr/bin/python3) 虚拟环境名称`创建指定Python版本的虚拟环境。
+
 `workon 虚拟环境名称`进入虚拟环境，在任何目录下都可以执行。
 
 在虚拟环境中安装模块时，不需要使用`sudo`，如果使用`sudo`会把模块安装在系统中的`Python`中。
