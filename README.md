@@ -8,6 +8,6 @@ Python 2.7
 
 
 ## 安装flask
-'''Python
+```Python
 pip install flask
-'''
+```
