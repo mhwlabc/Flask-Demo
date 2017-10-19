@@ -35,3 +35,6 @@ source /usr/bin/virtualenvwrapper.sh
 ```Python
 pip install flask
 ```
+
+## 启动服务
+`python Flaskr-Demo/flaskr/flaskr.py`
