@@ -1,8 +1,5 @@
 # Flask-Demo
 
-调用一次init_db()函数，用于生成sqlite3数据库。
-ps：现在不需要了，直接运行flaskr.py即可
-
 ## 虚拟环境配置
 
 Python版本：
